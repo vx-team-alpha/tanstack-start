@@ -13,24 +13,29 @@ export const fetchPost = createServerFn({ method: 'POST' })
   .handler(async ({ data, context }) => {
     console.log('Request context:', context)
     console.info(`Fetching post with id ${data}...`)
+
     const res = await fetch(
       `https://jsonplaceholder.typicode.com/posts/${data}`,
     )
+
     if (!res.ok) {
       if (res.status === 404) {
         throw notFound()
       }
-
       throw new Error('Failed to fetch post')
     }
 
     const post = await res.json()
-    console.log('Fetched post:', post)
-    return post as PostType
+
+    return {
+      ...post,
+      createdAt: new Date().toISOString(),
+    } as PostType
   })
 
 export const fetchPosts = createServerFn().handler(async () => {
   console.info('Fetching posts...')
+
   const res = await fetch('https://jsonplaceholder.typicode.com/posts')
   if (!res.ok) {
     throw new Error('Failed to fetch posts')
@@ -38,5 +43,10 @@ export const fetchPosts = createServerFn().handler(async () => {
 
   const posts = await res.json()
 
-  return posts as Array<PostType>
+  const now = new Date().toISOString()
+
+  return posts.map((post: PostType) => ({
+    ...post,
+    createdAt: now,
+  }))
 })

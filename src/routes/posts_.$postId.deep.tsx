@@ -36,8 +36,13 @@ function PostDeepComponent() {
       </Link>
 
       <h1 className="text-2xl font-bold mb-4 capitalize">{post.title}</h1>
+      {/* Change with every render */}
       <p className="bg-gray-100 p-2 rounded-md inline-block">
         GeneratedAt: {generatedAt}
+      </p>
+      {/* Presist with every render generated at build time */}
+      <p className="bg-gray-100 p-2 rounded-md inline-block">
+        Created At: {post.createdAt}
       </p>
       <div className="text-lg text-pretty capitalize">{post.body}</div>
     </div>
